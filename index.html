@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold text-blue-600">Lost & Found</a>
+        <ul class="flex space-x-6">
+            <li><a href="index.html" class="hover:text-blue-500">Home</a></li>
+            <li><a href="reportlost.html" class="hover:text-blue-500">Report Lost</a></li>
+            <li><a href="reportfound.html" class="hover:text-blue-500">Report Found</a></li>
+        </ul>
+        <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" id="signIn">Sign In</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="text-center py-10">
+        <h2 class="text-3xl font-semibold text-gray-800">Welcome to Lost & Found</h2>
+        <p class="text-gray-600 mt-2">Easily report and find lost items.</p>
+    </section>
+
+    <!-- Buttons to View Lost & Found -->
+    <div class="flex justify-center space-x-4 mb-8">
+        <button onclick="location.href='lostitems.html'" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">View Lost Items</button>
+        <button onclick="location.href='founditems.html'" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">View Found Items</button>
+    </div>
+
+    <script>
+        const cognitoAuthConfig = {
+            authority: "https://cognito-idp.ap-south-1.amazonaws.com/ap-south-1_2ZvLIx3Nt",
+            client_id: "5equ5odtfc32s32a4gsc063nhs",
+            redirect_uri: "https://d1m2xbzaoegy0p.cloudfront.net",
+            response_type: "code",
+            scope: "email openid phone"
+        };
+
+        const userManager = new oidc.UserManager(cognitoAuthConfig);
+
+        document.getElementById("signIn").addEventListener("click", async () => {
+            await userManager.signinRedirect();
+        });
+    </script>
+
+</body>
+</html>

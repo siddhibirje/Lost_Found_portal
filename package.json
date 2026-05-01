@@ -1,0 +1,15 @@
+{
+  "name": "lost-found",
+  "version": "1.0.0",
+  "description": "The **Virtual Lost & Found System** is a cloud-based platform where users can upload and track lost items. The backend is powered by **AWS** (S3 for file storage, DynamoDB for item data, and Cognito for user authentication). The front-end is designed for simplicity and ease of use.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "oidc-client-ts": "^3.5.0"
+  }
+}

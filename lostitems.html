@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Found Items</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <a href="signin.html" class="text-2xl font-bold text-blue-600">Lost & Found</a>
+        <ul class="flex space-x-6">
+            <li><a href="signin.html" class="hover:text-blue-500">Home</a></li>
+            <li><a href="reportlost.html" class="hover:text-blue-500">Report Lost</a></li>
+            <li><a href="reportfound.html" class="hover:text-blue-500">Report Found</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="text-center py-10">
+        <h2 class="text-3xl font-semibold text-gray-800">Lost Items</h2>
+        <p class="text-gray-600 mt-2">Click the button below to view lost items.</p>
+    </section>
+
+    <!-- Show Items Button -->
+    <div class="flex justify-center mb-6">
+        <button id="showItemsBtn" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+            Show Items
+        </button>
+    </div>
+
+    <!-- Found Items Table -->
+    <div class="max-w-6xl mx-auto p-4">
+        <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" id="foundItemsTable">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-4 py-2">Item Name</th>
+                    <th class="px-4 py-2">Location</th>
+                    <th class="px-4 py-2">Date</th>
+                    <th class="px-4 py-2">Remarks</th>
+                    <th class="px-4 py-2">Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="lost.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <a href="#" class="text-2xl font-bold text-blue-600">Lost & Found</a>
+        <ul class="flex space-x-6">
+            <li><a href="#" class="hover:text-blue-500">Home</a></li>
+            <li><a href="reportlost.html" class="hover:text-blue-500">Report Lost</a></li>
+            <li><a href="reportfound.html" class="hover:text-blue-500">Report Found</a></li>
+        </ul>
+        <button onclick="location.href='signout.html'" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" id="signOut">Logout</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="text-center py-10">
+        <h2 class="text-3xl font-semibold text-gray-800">Welcome to Lost & Found</h2>
+        <p class="text-gray-600 mt-2">Easily report and find lost items.</p>
+    </section>
+
+    <!-- Buttons to View Lost & Found -->
+    <div class="flex justify-center space-x-4 mb-8">
+        <!-- Button to View Lost Items -->
+<button onclick="location.href='lostitems.html'" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+    View Lost Items
+</button>
+
+<!-- Button to View Found Items -->
+<button onclick="location.href='founditems.html'" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+    View Found Items
+</button>
+</div>
+
+    <!-- Lost & Found Containers -->
+    <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="lost" class="bg-white shadow-lg rounded-lg p-6 hidden">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Lost Items</h3>
+            <div id="lostItems" class="space-y-4"></div>
+        </div>
+
+        <div id="found" class="bg-white shadow-lg rounded-lg p-6 hidden">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Found Items</h3>
+            <div id="foundItems" class="space-y-4"></div>
+        </div>
+    </div>
+
+    
+
+    <!-- JavaScript -->
+    <script type="module">
+        import { signOutRedirect } from "./main.js";
+        
+        document.getElementById("signOut").addEventListener("click", async () => {
+            await signOutRedirect();
+        });
+        
+        function showPage(type) {
+            document.getElementById("lost").classList.toggle("hidden", type !== "lost");
+            document.getElementById("found").classList.toggle("hidden", type !== "found");
+        }
+
+
+
+        document.getElementById("lostForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            alert("Lost item reported successfully!");
+        });
+
+        document.getElementById("foundForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            alert("Found item reported successfully!");
+        });
+    </script>
+
+</body>
+</html>

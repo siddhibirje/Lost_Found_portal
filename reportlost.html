@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost & Found - Report Lost Item</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <a href="index.html" class="text-2xl font-bold text-blue-600">Lost & Found</a>
+        <ul class="flex space-x-6">
+            <li><a href="index.html" class="hover:text-blue-500">Home</a></li>
+            <li><a href="reportlost.html" class="hover:text-blue-500">Report Lost</a></li>
+            <li><a href="reportfound.html" class="hover:text-blue-500">Report Found</a></li>
+        </ul>
+        <button class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600" id="signOut">Logout</button>
+    </nav>
+
+    <div class="max-w-md mx-auto mt-10">
+        <form id="lostForm" class="bg-white shadow-md rounded-lg p-6 mt-6">
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Report a Lost Item</h3>
+            <input type="text" id="lostItemName" placeholder="Item Name" class="w-full p-2 border rounded mb-3" required>
+            <input type="text" id="lostLocation" placeholder="Location" class="w-full p-2 border rounded mb-3" required>
+            <input type="date" id="lostDate" class="w-full p-2 border rounded mb-3" required>
+            <input type="number" id="lostContact" placeholder="Contact Number" class="w-full p-2 border rounded mb-3" required>
+            <textarea id="lostRemark" placeholder="Remarks (Optional)" class="w-full p-2 border rounded mb-3"></textarea>
+            <input type="file" id="lostImage" accept="image/*" class="w-full p-2 border rounded mb-3">
+            <img id="lostPreview" class="hidden w-full mb-3 rounded" />
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/oidc-client-ts@2.4.0/dist/browser/oidc-client-ts.min.js"></script>
+    <script>
+        // Image preview
+        document.getElementById("lostImage").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById("lostPreview");
+                    preview.src = e.target.result;
+                    preview.classList.remove("hidden");
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submit — uploads image to S3 then saves to DynamoDB
+        document.getElementById("lostForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("lostItemName").value;
+            const location = document.getElementById("lostLocation").value;
+            const date = document.getElementById("lostDate").value;
+            const contact = document.getElementById("lostContact").value;
+            const remarks = document.getElementById("lostRemark").value;
+            const fileInput = document.getElementById("lostImage");
+            const file = fileInput.files[0];
+
+            if (!name || !location || !date || !contact) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            let imageUrl = "";
+
+            // Upload image to S3 if provided
+            if (file) {
+                const fileName = Date.now() + "_" + file.name;
+                const s3Url = `https://lost-found-images-aemu3.s3.ap-south-1.amazonaws.com/${fileName}`;
+
+                try {
+                    await fetch(s3Url, {
+                        method: "PUT",
+                        headers: { "Content-Type": file.type },
+                        body: file
+                    });
+                    imageUrl = s3Url;
+                } catch (err) {
+                    console.error("Image upload failed:", err);
+                }
+            }
+
+            // Save item to DynamoDB via Lambda
+            try {
+                const response = await fetch("https://jry0c2aolh.execute-api.ap-south-1.amazonaws.com/lostitem", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, location, date, contact, remarks, imageUrl })
+                });
+
+                if (response.ok) {
+                    alert("Lost item reported successfully!");
+                    window.location.href = "lostitems.html";
+                } else {
+                    alert("Failed to report lost item.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Something went wrong. Please try again.");
+            }
+        });
+
+        // Logout
+        const cognitoDomain = "https://ap-south-12zvlix3nt.auth.ap-south-1.amazoncognito.com";
+        const clientId = "5equ5odtfc32s32a4gsc063nhs";
+        const logoutUri = "https://d1m2xbzaoegy0p.cloudfront.net";
+        document.getElementById("signOut").addEventListener("click", () => {
+            window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+        });
+    </script>
+
+</body>
+</html>
